@@ -29,6 +29,13 @@ Subagent (general-purpose):
 
     **Ask them now.** Raise any concerns before starting work.
 
+    ## Workspace Boundary Check
+
+    Before starting any work, verify you are in the correct directory:
+    - Run `pwd` and compare it to the "Work from" path above.
+    - If they don't match, **STOP and report BLOCKED** — you may be in the main checkout, not your assigned worktree. Editing the main checkout is the #1 subagent failure mode.
+    - Never `cd` to or edit files outside your assigned directory. Never use absolute paths that resolve outside it.
+
     ## Your Job
 
     Once you're clear on requirements:
@@ -39,7 +46,7 @@ Subagent (general-purpose):
     5. Self-review (see below)
     6. Report back
 
-    Work from: [directory]
+    Work from: [ABSOLUTE PATH — the controller resolves this with $(cd "<path>" && pwd -P) before dispatch]
 
     **While you work:** If you encounter something unexpected or unclear, **ask questions**.
     It's always OK to pause and clarify. Don't guess or make assumptions.

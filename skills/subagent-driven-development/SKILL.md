@@ -243,6 +243,8 @@ and is re-read on every later turn. Hand artifacts over as files:
 - Fix dispatches append their fix report (with test results) to the same
   report file and return a short summary; re-reviews read the updated file.
 
+**Worktree path resolution:** When dispatching into a worktree, resolve the worktree path to an **absolute path** before passing it to the subagent (`$(cd "$WORKTREE_PATH" && pwd -P)`). Pass it as an absolute path in the dispatch prompt's "Work from:" field. A relative path resolves against the subagent's inherited cwd (often the main checkout), silently routing all file edits to main instead of the worktree. This is the #1 cause of subagents editing the main checkout.
+
 ## Durable Progress
 
 Conversation memory does not survive compaction. In real sessions,
@@ -375,6 +377,7 @@ Done!
 
 **Never:**
 - Start implementation on main/master branch without explicit user consent
+- Pass a relative worktree path to a subagent — it resolves against the main checkout. Always resolve to absolute first.
 - Skip task review, or accept a report missing either verdict (spec compliance AND task quality are both required)
 - Proceed with unfixed issues
 - Dispatch multiple implementation subagents in parallel (conflicts)
