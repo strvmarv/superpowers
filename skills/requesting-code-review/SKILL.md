@@ -39,11 +39,29 @@ Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md
 - `{BASE_SHA}` - Starting commit
 - `{HEAD_SHA}` - Ending commit
 
+**Default reviewer:** Use the gilfoyle-tech-reviewer agent (`../agents/gilfoyle-tech-reviewer.md`) as the reviewer persona — Bertrand Gilfoyle, providing multi-perspective technical review (code quality, security, architecture, UX, tech lead). The structured output format (strengths, issues by severity, assessment) from [code-reviewer.md](code-reviewer.md) remains the report contract; gilfoyle's methodology is the review lens.
+
+**Fallback:** If the gilfoyle agent file is unavailable, dispatch a plain `general-purpose` subagent filling the template at [code-reviewer.md](code-reviewer.md).
+
 **3. Act on feedback:**
 - Fix Critical issues immediately
 - Fix Important issues before proceeding
 - Note Minor issues for later
 - Push back if reviewer is wrong (with reasoning)
+
+## Default Reviewer
+
+The default reviewer is **gilfoyle-tech-reviewer** (`../agents/gilfoyle-tech-reviewer.md`), a multi-perspective technical reviewer persona. When dispatched, it provides:
+
+- **Code quality:** structure, readability, maintainability, performance, error handling
+- **Security:** threat modeling, common vulnerabilities, input validation, access controls
+- **Architecture:** design decisions, scalability, integration points, technical debt
+- **UX:** user workflows, friction points, accessibility, error states
+- **Tech lead perspective:** business alignment, team productivity, standards
+
+The structured output format (strengths, issues by severity, assessment, verdict) from `code-reviewer.md` is the report contract. Gilfoyle's methodology is the review lens — how the reviewer thinks, not what it produces.
+
+If gilfoyle is unavailable, fall back to a plain `general-purpose` subagent with the `code-reviewer.md` template. The output format is identical either way.
 
 ## Example
 
