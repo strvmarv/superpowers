@@ -54,7 +54,7 @@ digraph process {
         "Implementer subagent asks questions?" [shape=diamond];
         "Answer questions, provide context" [shape=box];
         "Implementer subagent implements, tests, commits, self-reviews" [shape=box];
-        "Write diff file, dispatch task reviewer subagent (./task-reviewer-prompt.md)" [shape=box];
+        "Write diff file, dispatch task reviewer (gilfoyle + ./task-reviewer-prompt.md)" [shape=box];
         "Task reviewer reports spec ✅ and quality approved?" [shape=diamond];
         "Dispatch fix subagent for Critical/Important findings" [shape=box];
         "Mark task complete in todo list and progress ledger" [shape=box];
@@ -70,15 +70,15 @@ digraph process {
     "Implementer subagent asks questions?" -> "Answer questions, provide context" [label="yes"];
     "Answer questions, provide context" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Implementer subagent asks questions?" -> "Implementer subagent implements, tests, commits, self-reviews" [label="no"];
-    "Implementer subagent implements, tests, commits, self-reviews" -> "Write diff file, dispatch task reviewer subagent (./task-reviewer-prompt.md)";
-    "Write diff file, dispatch task reviewer subagent (./task-reviewer-prompt.md)" -> "Task reviewer reports spec ✅ and quality approved?";
+    "Implementer subagent implements, tests, commits, self-reviews" -> "Write diff file, dispatch task reviewer (gilfoyle + ./task-reviewer-prompt.md)";
+    "Write diff file, dispatch task reviewer (gilfoyle + ./task-reviewer-prompt.md)" -> "Task reviewer reports spec ✅ and quality approved?";
     "Task reviewer reports spec ✅ and quality approved?" -> "Dispatch fix subagent for Critical/Important findings" [label="no"];
-    "Dispatch fix subagent for Critical/Important findings" -> "Write diff file, dispatch task reviewer subagent (./task-reviewer-prompt.md)" [label="re-review"];
+    "Dispatch fix subagent for Critical/Important findings" -> "Write diff file, dispatch task reviewer (gilfoyle + ./task-reviewer-prompt.md)" [label="re-review"];
     "Task reviewer reports spec ✅ and quality approved?" -> "Mark task complete in todo list and progress ledger" [label="yes"];
     "Mark task complete in todo list and progress ledger" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
-    "More tasks remain?" -> "Dispatch final code reviewer subagent (../requesting-code-review/code-reviewer.md)" [label="no"];
-    "Dispatch final code reviewer subagent (../requesting-code-review/code-reviewer.md)" -> "Use superpowers:finishing-a-development-branch";
+    "More tasks remain?" -> "Dispatch final code reviewer (gilfoyle-tech-reviewer + ../requesting-code-review/code-reviewer.md)" [label="no"];
+    "Dispatch final code reviewer (gilfoyle-tech-reviewer + ../requesting-code-review/code-reviewer.md)" -> "Use superpowers:finishing-a-development-branch";
 }
 ```
 
@@ -263,11 +263,18 @@ a ledger file, not only in todos.
 - `git clean -fdx` will destroy the ledger (it's git-ignored scratch); if
   that happens, recover from `git log`.
 
+## Reviewer Persona
+
+**Default:** Dispatch the gilfoyle-tech-reviewer agent (`agents/gilfoyle-tech-reviewer.md`) as the reviewer for both per-task reviews and the final whole-branch review. The reviewer gets the gilfoyle persona as its system prompt plus the structured output template (`task-reviewer-prompt.md` for per-task, `code-reviewer.md` for final) as the report format.
+
+**Fallback:** If the gilfoyle agent file is unavailable, fall back to a plain `general-purpose` subagent with the existing template (no persona). The structured output format is the same either way.
+
 ## Prompt Templates
 
+- [agents/gilfoyle-tech-reviewer.md](agents/gilfoyle-tech-reviewer.md) - Default reviewer persona (Bertrand Gilfoyle — multi-perspective technical review: code quality, security, architecture, UX, tech lead). Used as the system prompt for both per-task and final reviews. The structured output format (verdicts, strengths, issues by severity, assessment) from `task-reviewer-prompt.md` / `code-reviewer.md` remains the report contract; gilfoyle's methodology is the review lens.
 - [implementer-prompt.md](implementer-prompt.md) - Dispatch implementer subagent
 - [task-reviewer-prompt.md](task-reviewer-prompt.md) - Dispatch task reviewer subagent (spec compliance + code quality)
-- Final whole-branch review: use superpowers:requesting-code-review's [code-reviewer.md](../requesting-code-review/code-reviewer.md)
+- Final whole-branch review: use superpowers:requesting-code-review's [code-reviewer.md](../requesting-code-review/code-reviewer.md) (with gilfoyle as the reviewer persona)
 
 ## Example Workflow
 
