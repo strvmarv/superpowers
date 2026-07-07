@@ -139,6 +139,12 @@ Tests passing (<N> tests, 0 failures)
 Ready to implement <feature-name>
 ```
 
+## Subagent Isolation
+
+When a subagent runs in a worktree, pass the worktree's **absolute path** as its `cwd`. A relative path resolves against the subagent's inherited cwd (often the main checkout), silently routing all file edits to main instead of the worktree. Always resolve with `$(cd "$WORKTREE_PATH" && pwd -P)` before dispatching.
+
+The controller should verify the subagent's commits landed on the worktree branch, not main, after the subagent returns.
+
 ## Quick Reference
 
 | Situation | Action |

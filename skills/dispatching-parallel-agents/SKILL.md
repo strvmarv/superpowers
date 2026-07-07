@@ -126,6 +126,8 @@ Return: Summary of what you found and what you fixed.
 **❌ Vague output:** "Fix it" - you don't know what changed
 **✅ Specific:** "Return summary of root cause and changes"
 
+- **Passing relative worktree paths:** A subagent resolves a relative path against its inherited cwd (often the main checkout). Always pass an absolute path (`$(cd "$path" && pwd -P)`) when dispatching into a worktree.
+
 ## When NOT to Use
 
 **Related failures:** Fixing one might fix others - investigate together first
